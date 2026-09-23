@@ -1,0 +1,265 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ─── Theme tokens (RGB channels so Tailwind opacity modifiers work) ─── */
+:root,
+.light {
+  --background: 235 237 245;
+  --foreground: 26 27 33;
+  --card: 248 249 253;
+  --muted: 222 224 232;
+  --muted-foreground: 83 85 94;
+  --accent: 217 220 231;
+  --primary: 29 31 38;
+  --primary-foreground: 246 247 249;
+  --destructive: 228 0 20;
+  --ring: 105 101 201;
+  --status: 5 150 105;
+  --g1: 59 70 112;
+  --g2: 61 94 209;
+  --g3: 124 58 237;
+  --border: 207 209 218;
+  --border-alpha: 1;
+  --input-alpha: 1;
+  --ease-out-strong: cubic-bezier(.23, 1, .32, 1);
+  --wave-1: 255 255 255;
+  --wave-2: 125 151 255;
+  --wave-3: 155 122 245;
+  --stars-opacity: 0;
+  color-scheme: light;
+}
+
+.dark {
+  --background: 18 18 22;
+  --foreground: 230 232 236;
+  --card: 27 27 32;
+  --muted: 35 36 41;
+  --muted-foreground: 153 155 163;
+  --accent: 40 42 49;
+  --primary: 230 232 236;
+  --primary-foreground: 23 24 29;
+  --destructive: 255 101 104;
+  --ring: 122 121 215;
+  --status: 52 211 153;
+  --g1: 231 233 242;
+  --g2: 108 140 255;
+  --g3: 139 92 246;
+  --border: 255 255 255;
+  --border-alpha: 0.1;
+  --input-alpha: 0.14;
+  --wave-1: 223 227 245;
+  --wave-2: 108 140 255;
+  --wave-3: 123 79 232;
+  --stars-opacity: 0.55;
+  color-scheme: dark;
+}
+
+@layer base {
+  html {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+  /* Lenis drives smooth scrolling (src/lib/smoothScroll.js); these are its required rules. */
+  html.lenis, html.lenis body { height: auto; }
+  .lenis.lenis-smooth { scroll-behavior: auto !important; }
+  .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+  .lenis.lenis-stopped { overflow: clip; }
+  body {
+    @apply bg-background font-sans text-foreground;
+    overflow-x: clip;
+    transition: background-color .3s ease, color .3s ease;
+  }
+  ::selection { background: rgb(var(--g2) / .35); }
+  :focus-visible { outline: 2px solid rgb(var(--ring)); outline-offset: 3px; }
+  img { max-width: 100%; }
+}
+
+@layer components {
+  .skip-link {
+    position: fixed; left: 1rem; top: -4rem; z-index: 100;
+    padding: .6rem 1rem; border-radius: 999px;
+    background: rgb(var(--foreground)); color: rgb(var(--background));
+    font: 500 14px/1 var(--font-inter), system-ui, sans-serif;
+    transition: top .2s var(--ease-out-strong);
+  }
+  .skip-link:focus { top: 1rem; }
+
+  /* Frosted panels (nav, pills, cards) */
+  .glass {
+    background: #ffffff9e;
+    border: 1px solid #16182614;
+    box-shadow: inset 0 1px #ffffff8c, 0 8px 32px #1618260f;
+    -webkit-backdrop-filter: blur(16px) saturate(160%);
+    backdrop-filter: blur(16px) saturate(160%);
+  }
+  .dark .glass {
+    background: #ffffff0b;
+    border-color: #ffffff1a;
+    box-shadow: inset 0 1px #ffffff14, 0 8px 32px #00000040;
+  }
+  .glass-strong {
+    background: #ffffffd1;
+    border: 1px solid #16182617;
+    box-shadow: inset 0 1px #fff9, 0 24px 80px #16182624;
+    -webkit-backdrop-filter: blur(24px) saturate(170%);
+    backdrop-filter: blur(24px) saturate(170%);
+  }
+  .dark .glass-strong {
+    background: rgb(27 27 32 / .86);
+    border-color: #ffffff1f;
+    box-shadow: inset 0 1px #ffffff1a, 0 24px 80px #00000073;
+  }
+
+  .text-gradient {
+    background-image: linear-gradient(100deg, rgb(var(--g1)) 0%, rgb(var(--g2)) 55%, rgb(var(--g3)) 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .text-gradient-soft {
+    background-image: linear-gradient(180deg, rgb(var(--foreground)) 30%, rgb(var(--g1) / .75) 100%);
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+
+  /* Button with a comet of colour orbiting inside its border (Resume, Send) */
+  .btn-orbit {
+    position: relative; isolation: isolate; overflow: hidden;
+    border-radius: 999px;
+    border: 1px solid rgb(var(--border) / calc(var(--input-alpha) * 1));
+    background: rgb(var(--foreground) / .045);
+    -webkit-backdrop-filter: blur(12px); backdrop-filter: blur(12px);
+  }
+  .btn-orbit::before {
+    content: ""; position: absolute; z-index: -1;
+    left: 50%; top: 50%; width: 260%; aspect-ratio: 1;
+    translate: -50% -50%;
+    background: conic-gradient(from 0deg, transparent 0deg, transparent 290deg, rgb(var(--g2)) 330deg, rgb(var(--g3)) 352deg, transparent 360deg);
+    animation: orbit 5s linear infinite;
+  }
+  .btn-orbit:hover { background: rgb(var(--foreground) / .1); }
+
+  /* Nav links: gradient underline grows from the left */
+  .nav-link { position: relative; }
+  .nav-link::before {
+    content: ""; position: absolute; left: 0; right: 0; bottom: -4px; height: 1px;
+    background: linear-gradient(90deg, rgb(var(--g2)), rgb(var(--g3)));
+    transform: scaleX(0); transform-origin: left;
+    transition: transform .3s var(--ease-out-strong);
+  }
+  .nav-link:hover::before, .nav-link[aria-current="true"]::before { transform: scaleX(1); }
+
+  /* Skill chips flip over on hover, revealing the inverted face */
+  .chip { perspective: 600px; }
+  .chip-inner {
+    display: grid; transform-style: preserve-3d;
+    transition: transform .55s var(--ease-out-strong);
+  }
+  .chip-face {
+    grid-area: 1 / 1; backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    border-radius: 999px; padding: .375rem .875rem; white-space: nowrap;
+    border: 1px solid rgb(var(--border) / calc(var(--border-alpha) * .9));
+    background: rgb(var(--card)); color: rgb(var(--foreground) / .85);
+  }
+  .chip-face.back {
+    transform: rotateX(180deg);
+    background: rgb(var(--foreground)); border-color: rgb(var(--foreground)); color: rgb(var(--background));
+  }
+  @media (hover: hover) and (pointer: fine) {
+    .chip:hover .chip-inner { transform: rotateX(180deg); }
+  }
+  .chip:active .chip-inner { transform: rotateX(180deg); }
+  .physics-on .chip .chip-inner { transform: none !important; }
+
+  /* Inline inputs inside the conversational contact sentence */
+  .inline-field {
+    border-bottom: 2px dotted rgb(var(--g2) / .5);
+    transition: border-color .2s ease;
+  }
+  .inline-field:focus { border-bottom-style: solid; border-color: rgb(var(--g2)); }
+  .inline-field[aria-invalid="true"] { border-color: rgb(var(--destructive)); }
+
+  /* Native <dialog> animations */
+  dialog.modal { opacity: 0; transform: translateY(12px) scale(.98); }
+  dialog.modal[open] { opacity: 1; transform: none; }
+  dialog.sheet { transform: translateX(100%); }
+  dialog.sheet[open] { transform: none; }
+  dialog.modal, dialog.sheet {
+    transition: opacity .3s var(--ease-out-strong), transform .45s cubic-bezier(.32, .72, 0, 1), overlay .45s allow-discrete, display .45s allow-discrete;
+  }
+  @starting-style {
+    dialog.modal[open] { opacity: 0; transform: translateY(12px) scale(.98); }
+    dialog.sheet[open] { transform: translateX(100%); }
+  }
+  dialog::backdrop {
+    background: rgb(0 0 0 / 0); -webkit-backdrop-filter: blur(0); backdrop-filter: blur(0);
+    transition: background .3s ease, backdrop-filter .3s ease, overlay .3s allow-discrete, display .3s allow-discrete;
+  }
+  dialog[open]::backdrop { background: rgb(0 0 0 / .45); -webkit-backdrop-filter: blur(8px); backdrop-filter: blur(8px); }
+  @starting-style { dialog[open]::backdrop { background: rgb(0 0 0 / 0); backdrop-filter: blur(0); } }
+
+  /* Floating logos in the skills cloud */
+  .float-logo { animation: bob var(--dur, 7s) ease-in-out var(--delay, 0s) infinite alternate; }
+}
+
+/* ─── Grain background (GrainBackground.jsx) ───
+   Each texel of the 256px masks maps to one device pixel, so grain stays crisp. */
+.grain-layer, .stars-layer {
+  -webkit-mask-repeat: repeat; mask-repeat: repeat;
+  -webkit-mask-size: var(--tile, 256px); mask-size: var(--tile, 256px);
+}
+.grain-layer {
+  background: rgb(var(--background));
+  -webkit-mask-image: var(--grain-url); mask-image: var(--grain-url);
+}
+.stars-layer {
+  background: rgb(var(--wave-1));
+  opacity: var(--stars-opacity);
+  -webkit-mask-image: var(--stars-url); mask-image: var(--stars-url);
+  -webkit-mask-position: 37px 91px; mask-position: 37px 91px;
+}
+@media (min-resolution: 1.2dppx) { :root { --tile: calc(256px / 1.25); } }
+@media (min-resolution: 1.4dppx) { :root { --tile: calc(256px / 1.5); } }
+@media (min-resolution: 1.7dppx) { :root { --tile: calc(256px / 1.75); } }
+@media (min-resolution: 1.9dppx) { :root { --tile: 128px; } }
+@media (min-resolution: 2.4dppx) { :root { --tile: calc(256px / 2.5); } }
+@media (min-resolution: 2.9dppx) { :root { --tile: calc(256px / 3); } }
+.grain-drift { animation: grain-drift 22s ease-in-out infinite alternate; transform-origin: 50% 60%; }
+@keyframes grain-drift {
+  from { transform: translate3d(-2%, 0, 0) scale(1.04); }
+  to { transform: translate3d(2%, -2%, 0) scale(1.08); }
+}
+
+@keyframes orbit { to { transform: rotate(360deg); } }
+@keyframes bob {
+  from { transform: translate3d(0, -6px, 0) rotate(calc(var(--rot, 0deg) * -1)); }
+  to { transform: translate3d(0, 6px, 0) rotate(var(--rot, 0deg)); }
+}
+@keyframes initial-blur { from { filter: blur(3px); opacity: .4; } to { filter: blur(0); opacity: 1; } }
+.initial-blur { animation: initial-blur .6s var(--ease-out-strong) both; }
+
+/* Scroll reveals (toggled by the Reveal component). Content is only hidden once the app has
+   hydrated and added .js-reveal to <html>, so if JavaScript fails nothing stays invisible. */
+.js-reveal .reveal:not(.is-in) { opacity: 0; filter: blur(4px); transform: translateY(16px); }
+.js-reveal .reveal-tilt:not(.is-in) { opacity: 0; transform: translateY(36px) rotate(-1deg); }
+.reveal, .reveal-tilt {
+  transition: opacity .8s var(--ease-out-strong), filter .8s var(--ease-out-strong), transform .9s var(--ease-out-strong);
+  transition-delay: var(--delay, 0ms);
+}
+.mask-line { display: block; overflow: clip; padding-bottom: .08em; margin-bottom: -.08em; }
+.mask-line > span { display: block; }
+.js-reveal .mask-line > span {
+  transform: translateY(115%);
+  transition: transform 1s var(--ease-out-strong); transition-delay: var(--delay, 0ms);
+}
+.js-reveal .is-in .mask-line > span, .js-reveal .mask-line.is-in > span { transform: none; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: .001ms !important; animation-iteration-count: 1 !important;
+    transition-duration: .001ms !important; transition-delay: 0ms !important;
+  }
+  .js-reveal .reveal, .js-reveal .reveal-tilt { opacity: 1; filter: none; transform: none; }
+  .js-reveal .mask-line > span { transform: none; }
+  .btn-orbit::before { animation: none; transform: rotate(210deg); }
+  .float-logo, .grain-drift { animation: none; }
+}
