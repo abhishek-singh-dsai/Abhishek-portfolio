@@ -16,7 +16,7 @@ export const portfolio = {
     name: 'Abhishek Singh',
     monogram: 'Abhi',
     title: '[AI Engineer]', // page <title>, SEO, OG image
-    headlineRole: '[Data Science and Artificial Intelligence]', // second line of the big hero headline
+    headlineRole: '[DS & AI]', // second line of the big hero headline
     intro: '[One or two sentences about what you build and what you care about.]',
     status: '[Open to work]', // '' hides the pill
     location: 'New Delhi', // TODO(you) e.g. 'Delhi, India'
