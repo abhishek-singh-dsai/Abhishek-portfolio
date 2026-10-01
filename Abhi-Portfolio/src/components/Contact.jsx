@@ -19,7 +19,7 @@ const ACCESS_KEY = process.env.NEXT_PUBLIC_CONTACT_ACCESS_KEY || '';
 const CONFIGURED = Boolean(ENDPOINT || personal.email);
 
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
-const empty = { name: '', country: '', topic: contact.topics[0], email: '', message: '', company: '' };
+const empty = { name:'', country:'', topic: contact.topics[0], email: '', message: '', company: '' };
 
 /** Input that sizes itself to its content so it sits inside the sentence. */
 function InlineField({ id, value, placeholder, invalid, multiline, onChange, inputRef, ...rest }) {
