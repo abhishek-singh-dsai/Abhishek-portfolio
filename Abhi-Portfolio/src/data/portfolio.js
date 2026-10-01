@@ -14,16 +14,16 @@
 export const portfolio = {
   personal: {
     name: 'Abhishek Singh',
-    monogram: 'AS',
-    title: '[Your title, e.g. Full-Stack Developer]', // page <title>, SEO, OG image
-    headlineRole: '[Your role]', // second line of the big hero headline
+    monogram: 'Abhi',
+    title: '[AI Engineer]', // page <title>, SEO, OG image
+    headlineRole: '[DS & AI]', // second line of the big hero headline
     intro: '[One or two sentences about what you build and what you care about.]',
-    status: '[Availability, e.g. Open to internships]', // '' hides the pill
-    location: '', // TODO(you) e.g. 'Delhi, India'
-    email: '', // TODO(you) needed for the contact form fallback and the footer
-    phone: '', // optional
-    github: '#', // TODO(you) full URL, e.g. 'https://github.com/you'
-    linkedin: '#', // TODO(you)
+    status: '[Open to work]', // '' hides the pill
+    location: 'New Delhi', // TODO(you) e.g. 'Delhi, India'
+    email: 'abhishek.singh.dsai@gmail.com', // TODO(you) needed for the contact form fallback and the footer
+    phone: '+91 9520898066', // optional
+    github: 'https://github.com/abhishek-singh-dsai', // TODO(you) full URL, e.g. 'https://github.com/you'
+    linkedin: 'linkedin.com/in/abhishek-singh004', // TODO(you)
     x: '#', // TODO(you)
     instagram: '#', // TODO(you)
     medium: '',
@@ -42,7 +42,7 @@ export const portfolio = {
   projects: [
     {
       id: 'project-1',
-      title: '[Project name]',
+      title: '[Multimodal RAG System]',
       tagline: '[One-line summary]',
       description: '[What it does, who it is for and why it matters.]',
       bullets: ['[Key result or feature]', '[Key result or feature]', '[Key result or feature]'],
